@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faSearch, faTable, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,8 @@ import { Spinner } from "../../components/spinner/spinner";
 import { useAppDispatch } from "../../store/store";
 import { fetchUsers } from "../../actions/user";
 import ErrorMessage from "../../components/error/error-message";
+import { FollowersChart } from "../chart/followers.chart";
+import { FollowersUserData } from '../../interfaces/user/follower';
 
 
 
@@ -43,6 +45,9 @@ type UserFilter = {
 export const SearchBar = () => {
   const [filter, setFilters] = useState<UsersFilters>({} as UsersFilters);
   const [showSpinner, setShowSpinner] = useState(true);
+  const [showFollowerChart, setShowFollowerChart] = useState(false);
+  const [showTableResults, setShowTableResults] = useState(true);
+  const [userFollowers, setUserFollowers] = useState<FollowersUserData[]>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -58,6 +63,12 @@ export const SearchBar = () => {
     }
   }, [showSpinner]);
 
+  useEffect(() => {
+    if (data && data.items.length > 0) {
+      setUserFollowers(data.items);
+    }
+  }, [data]);
+
 
   const {
     register,
@@ -68,6 +79,7 @@ export const SearchBar = () => {
   });
 
   const IS_SUCCESS_CONSULTED = !isLoading && data && data.items
+  const USERS_NOT_FOUND = !showSpinner && !isLoading && data && data?.items?.length === 0
   if (IS_SUCCESS_CONSULTED) {
     dispatch(fetchUsers(data))
   }
@@ -81,18 +93,28 @@ export const SearchBar = () => {
       });
       return;
     }
-
     const filterData: UsersFilters = {
       name: filter.name
     }
-
-    setShowSpinner(true); 
+    setShowSpinner(true);
     setFilters(filterData);
   };
 
   const handleViewProfile = (user: UserColumnsTable) => {
     navigate(`/user/${user.login}`);
   }
+
+  const toggleShowChart = () => {
+    setShowFollowerChart(true);
+    setShowTableResults(false);
+  }
+
+  const toggleTableResults = () => {
+    setShowFollowerChart(false);
+    setShowTableResults(true);
+  }
+
+
 
   const buttonActions = (user: UserColumnsTable): JSX.Element[] => {
     return [
@@ -108,6 +130,25 @@ export const SearchBar = () => {
 
   return (
     <div className="bg-gray-100 p-4 rounded-lg">
+      {data && data.items.length > 0 && (
+        <div className="bg-gray-100 p-4 rounded-lg relative">
+          <button
+            className="absolute top-4 right-4 bg-green-200 text-green-700 px-2 py-1 rounded-lg flex items-center"
+            onClick={toggleShowChart}
+          >
+            <FontAwesomeIcon icon={faChartBar} className="mr-1" />Ver Gráfico de followers
+          </button>
+
+          <button
+            className="absolute top-12 right-4 bg-blue-200 px-2 py-1 rounded-lg flex items-center"
+            onClick={toggleTableResults}
+          >
+            <FontAwesomeIcon icon={faUsers} className="mr-1" />Ver Usuarios
+          </button>
+        </div>
+
+      )}
+
       <div className="table_factoryContainer flex justify-center flex-col items-center mt-5">
         <div className="max-w-2xl mx-auto text-center mb-3">
           <p className="text-lg font-semibold">Bienvenido a Github users app</p>
@@ -145,10 +186,10 @@ export const SearchBar = () => {
       </div>
 
       {showSpinner &&
-      <div className="flex justify-center my-5"><Spinner /></div>
-       }
+        <div className="flex justify-center my-5"><Spinner /></div>
+      }
 
-      {data && data?.items?.length > 0 && !showSpinner && (
+      {data && data?.items?.length > 0 && !showSpinner && showTableResults && !showFollowerChart && (
         <div className="max-w-auto mx-auto mt-5">
           <h1 className="text-center">Lista de usuarios</h1>
           <div className="text-center">
@@ -161,12 +202,21 @@ export const SearchBar = () => {
         </div>
       )}
 
-    {!showSpinner && !isLoading && data && data?.items?.length === 0 && (
-      <p className="text-2xl text-red-500 text-center mt-5">Ops! usuario no encontrado</p>
-    )}
+      {!showTableResults && showFollowerChart && (
+        <div className="max-w-auto mx-auto mt-5">
+          <h1 className="text-center">Grafico de followers</h1>
+          <div className="text-center">
+            <FollowersChart data={userFollowers} />
+          </div>
+        </div>
+      )}
+
+      {USERS_NOT_FOUND && (
+        <p className="text-2xl text-red-500 text-center mt-5">Ops! usuario no encontrado</p>
+      )}
 
       {isError && (
-        <ErrorMessage message="Ha ocurrido un error al realizar la consulta"/>
+        <ErrorMessage message="Ha ocurrido un error al realizar la consulta" />
       )}
     </div>
   );
