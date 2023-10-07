@@ -1,3 +1,5 @@
+import './table.css'
+
 
 export interface TableColumn<T> {
   header: string;
@@ -19,12 +21,12 @@ export const TableFactory = <T,>({ data, columns, buttonActions }: TableFactoryP
             <th
               key={index}
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               {column.header}
             </th>
           ))}
-          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Actions
           </th>
         </tr>
@@ -37,7 +39,7 @@ export const TableFactory = <T,>({ data, columns, buttonActions }: TableFactoryP
                  {(item[column.field] as string)}
               </td>
             ))}
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" id="action-button_container">
               {buttonActions(item)}
             </td>
           </tr>
