@@ -14,6 +14,7 @@ import useGithubUsers from "../../hooks/use-search-user";
 import { Spinner } from "../../components/spinner/spinner";
 import { useAppDispatch } from "../../store/store";
 import { fetchUsers } from "../../actions/user";
+import ErrorMessage from "../../components/error/error-message";
 
 
 
@@ -160,12 +161,12 @@ export const SearchBar = () => {
         </div>
       )}
 
+    {!showSpinner && !isLoading && data && data?.items?.length === 0 && (
+      <p className="text-2xl text-red-500 text-center mt-5">Ops! usuario no encontrado</p>
+    )}
+
       {isError && (
-        ModalResponse({
-          title: "Error de consulta",
-          text: "No se pudo realizar la consulta",
-          res: ResponseCodes.ERROR,
-        })
+        <ErrorMessage message="Ha ocurrido un error al realizar la consulta"/>
       )}
     </div>
   );
