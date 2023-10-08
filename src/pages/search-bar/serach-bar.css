@@ -1,0 +1,9 @@
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart-container--chart{
+    max-width: 800px;
+}

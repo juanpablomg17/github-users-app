@@ -203,7 +203,7 @@ export const SearchBar = () => {
       )}
 
       {!showTableResults && showFollowerChart && (
-        <div className="max-w-auto mx-auto mt-5">
+        <div className="max-w-3xl mx-auto mt-5">
           <h1 className="text-center">Grafico de followers</h1>
           <div className="text-center">
             <FollowersChart data={userFollowers} />

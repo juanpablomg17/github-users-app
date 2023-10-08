@@ -75,5 +75,5 @@ export const FollowersChart = ({ data }: { data: FollowersUserData[] }) => {
     },
   };
 
-  return <Bar options={options} data={chartData} />;
+  return <Bar options={options}  data={chartData} />;
 };
