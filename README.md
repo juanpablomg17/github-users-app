@@ -22,7 +22,7 @@ This is a simple web application built with React and Vite that allows you to se
 $ pnpm i
 
 # development
-$ pnpm run dev
+$ pnpm run dev (I develop this project using pnpm 8.8.0 version)
 
 Important: In the repository, there is the only environment variable used, so you shouldn't have any problems running it.
 ```
