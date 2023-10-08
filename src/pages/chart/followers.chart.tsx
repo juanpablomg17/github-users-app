@@ -1,8 +1,6 @@
-
 import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { FollowersUserData } from '../../interfaces/user/follower'; 
-
 
 import {
   Chart as ChartJS,
@@ -13,7 +11,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
 
 // Registra los elementos de Chart.js que necesitas
 ChartJS.register(
@@ -31,24 +28,25 @@ export const FollowersChart = ({ data }: { data: FollowersUserData[] }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const counts: number[] = [];
-      const names: string[] = [];
-
-      for (const user of data) {
-        try {
+      try {
+        const promises = data.map(async (user) => {
           const response = await fetch(user.followers_url);
           if (response.ok) {
             const followers = await response.json();
-            counts.push(followers.length);
-            names.push(user.login);
+            return followers.length;
+          } else {
+            throw new Error(`Error fetching data for ${user.login}`);
           }
-        } catch (error) {
-          console.error(`Error fetching data for ${user.login}: ${error}`);
-        }
-      }
+        });
 
-      setFollowerCounts(counts);
-      setUsernames(names);
+        const counts = await Promise.all(promises);
+        const names = data.map((user) => user.login);
+
+        setFollowerCounts(counts);
+        setUsernames(names);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchData();
