@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faSearch, faTable, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faSearch, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
@@ -51,7 +51,7 @@ export const SearchBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { data, isLoading, isFetching, isError } = useGithubUsers(filter);
+  const { data, isLoading, isError } = useGithubUsers(filter);
 
   useEffect(() => {
     if (showSpinner) {

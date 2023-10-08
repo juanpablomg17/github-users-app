@@ -1,3 +1,3 @@
 export const config =  {
-    gituhubApiUrl: 'https://api.github.com',
+    gituhubApiUrl: import.meta.env.VITE_GITHUB_API,
 }

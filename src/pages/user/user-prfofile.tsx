@@ -1,8 +1,6 @@
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { usersSelector } from '../../feature/user/user.slice'
 import { UserProfileDto } from '../../interfaces/user/user'
 
 import useGithubUserProfiles from "../../hooks/use-search-user-profiles";
